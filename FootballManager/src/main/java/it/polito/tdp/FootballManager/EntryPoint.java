@@ -15,12 +15,14 @@ public class EntryPoint extends Application {
     @Override
     public void start(Stage stage) throws Exception {
     	
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
+    	//FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Home.fxml"));
     	Parent root = loader.load();
    
         Scene scene = new Scene(root);
         Model model = new Model();
-        FXMLController controller = loader.getController();
+        //FXMLController controller = loader.getController();
+        HomeController controller = loader.getController();
         controller.setModel(model);
         
         scene.getStylesheets().add("/styles/Styles.css");

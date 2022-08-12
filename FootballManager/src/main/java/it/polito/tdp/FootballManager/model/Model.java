@@ -8,6 +8,20 @@ import it.polito.tdp.FootballManager.db.FootballerDAO;
 
 public class Model {
 	
+	private String selectedTeam;
+	
+	public String getSelectedTeam() {
+		return selectedTeam;
+	}
+
+
+
+	public void setSelectedTeam(String selectedTeam) {
+		this.selectedTeam = selectedTeam;
+	}
+
+
+
 	private FootballerDAO footballerDAO;
 	private ClubDAO clubDAO;
 	
