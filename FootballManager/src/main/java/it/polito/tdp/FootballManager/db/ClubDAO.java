@@ -12,7 +12,7 @@ import it.polito.tdp.FootballManager.model.Footballer;
 
 public class ClubDAO {
 	
-	public List<Footballer> getFootballerByTeam(String team) {
+	public List<Footballer> getFootballerByTeam(Club club) {
 		
 		List<Footballer> footballers = new LinkedList<Footballer>();
 		
@@ -25,7 +25,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -129,7 +129,7 @@ public class ClubDAO {
 		return clubs;
 	}
 	
-	public double averageAge(String team) {
+	public double averageAge(Club club) {
 		
 		double avg = 0.0;
 		
@@ -142,7 +142,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -164,7 +164,7 @@ public class ClubDAO {
 		return avg;
 	}
 	
-	public double averageWage(String team) {
+	public double averageWage(Club club) {
 		
 		double avg = 0.0;
 		
@@ -177,7 +177,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -199,7 +199,7 @@ public class ClubDAO {
 		return avg;
 	}
 	
-	public double totValue(String team) {
+	public double totValue(Club club) {
 		
 		double tot = 0.0;
 		
@@ -212,7 +212,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -236,7 +236,7 @@ public class ClubDAO {
 		return tot;
 	}
 	
-	public double averageTec(String team) {
+	public double averageTec(Club club) {
 		
 		double avg = 0.0;
 		
@@ -249,7 +249,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -271,7 +271,7 @@ public class ClubDAO {
 		return avg;
 	}
 	
-	public double averagePas(String team) {
+	public double averagePas(Club club) {
 		
 		double avg = 0.0;
 		
@@ -284,7 +284,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -306,7 +306,7 @@ public class ClubDAO {
 		return avg;
 	}
 	
-	public double averageMar(String team) {
+	public double averageMar(Club club) {
 			
 			double avg = 0.0;
 			
@@ -319,7 +319,7 @@ public class ClubDAO {
 				Connection conn = DBConnect.getConnection();
 				PreparedStatement st = conn.prepareStatement(sql);		
 				
-				st.setString(1, team);
+				st.setString(1, club.getName());
 				
 				ResultSet rs = st.executeQuery();
 				
@@ -341,7 +341,7 @@ public class ClubDAO {
 			return avg;
 		}
 
-	public double averagePos(String team) {
+	public double averagePos(Club club) {
 		
 		double avg = 0.0;
 		
@@ -354,7 +354,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -376,7 +376,7 @@ public class ClubDAO {
 		return avg;
 	}
 
-	public double averageStr(String team) {
+	public double averageStr(Club club) {
 		
 		double avg = 0.0;
 		
@@ -389,7 +389,7 @@ public class ClubDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);		
 			
-			st.setString(1, team);
+			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -412,6 +412,47 @@ public class ClubDAO {
 	}
 	
 	
+
+	public List<Club> getAllClubsObjectByChampionship(String championship) {
+		
+		List<Club> clubs = new LinkedList<>();
+		
+		String sql = "SELECT p.club as club, p.based as c "
+				+ "FROM playerdef p "
+				+ "WHERE p.based=?";
+		
+		
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);	
+			
+			st.setString(1, championship);
+			
+			ResultSet rs = st.executeQuery();
+			
+	
+			
+			while(rs.next()) {
+				Club club = new Club(rs.getString("club"), rs.getString("c"));
+				if(!clubs.contains(club)) {
+					clubs.add(club);
+				}
+			}
+			
+			conn.close();
+			st.close();
+			rs.close();			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return clubs;
+	}
+	
+	/* METODI NON PIU' USATI
+
 	public List<Club> getAllClubsObject(){
 		
 		List<Club> clubs = new LinkedList<>();
@@ -473,5 +514,5 @@ public class ClubDAO {
 		}
 		
 		return club;
-	}
+	} */
 }

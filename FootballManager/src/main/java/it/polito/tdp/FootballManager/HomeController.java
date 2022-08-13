@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.FootballManager.model.Club;
 import it.polito.tdp.FootballManager.model.Footballer;
 import it.polito.tdp.FootballManager.model.Model;
 import javafx.collections.FXCollections;
@@ -45,7 +46,7 @@ public class HomeController {
     private ChoiceBox<String> boxChampionship; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxTeam"
-    private ChoiceBox<String> boxTeam; // Value injected by FXMLLoader
+    private ChoiceBox<Club> boxTeam; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnBuyPage"
     private Button btnBuyPage; // Value injected by FXMLLoader
@@ -59,8 +60,8 @@ public class HomeController {
     @FXML // fx:id="btnTeam"
     private Button btnTeam; // Value injected by FXMLLoader
 
-    @FXML // fx:id="colName"
-    private TableColumn<Footballer, String> colName; // Value injected by FXMLLoader
+/*  @FXML // fx:id="colName"
+  	private TableColumn<Footballer, String> colName; // Value injected by FXMLLoader
 
     @FXML // fx:id="colRole"
     private TableColumn<Footballer, String> colRole; // Value injected by FXMLLoader
@@ -74,11 +75,11 @@ public class HomeController {
     @FXML // fx:id="colYear"
     private TableColumn<Footballer, Integer> colYear; // Value injected by FXMLLoader
 
+    @FXML // fx:id="tabPlayers"
+    private TableView<Footballer> tabPlayers; // Value injected by FXMLLoader */
+    
     @FXML // fx:id="lblError"
     private Label lblError; // Value injected by FXMLLoader
-
-    @FXML // fx:id="tabPlayers"
-    private TableView<Footballer> tabPlayers; // Value injected by FXMLLoader
 
     @FXML
     void doChargeTeam(ActionEvent event) {
@@ -88,8 +89,10 @@ public class HomeController {
     	
     	if(championship!=null) {
         	boxTeam.getItems().clear();
-        	boxTeam.getItems().addAll(model.getAllClubsByChampionship(championship));
-        	
+        	for(Club ci: model.getAllClubsObjectByChampionship(championship)) {
+            	boxTeam.getItems().add(ci);
+        	}
+
         	lblError.setText(null);
             this.btnTeam.setDisable(false);
     	} else {
@@ -102,7 +105,7 @@ public class HomeController {
     @FXML
     void setTeam(ActionEvent event) {
     	
-    	String team = null;
+    	Club team = null;
     	team = boxTeam.getValue();
     	
     	if(team!=null) {
@@ -110,8 +113,9 @@ public class HomeController {
     		model.setSelectedTeam(team);
     		
     		/* Carico la tabella */
-        	List<Footballer> footballers = model.getFootballerByTeam(team); 	
-        	tabPlayers.setItems(FXCollections.observableArrayList(footballers));
+    		
+        /*	List<Footballer> footballers = model.getFootballerByTeam(team); 	
+        	tabPlayers.setItems(FXCollections.observableArrayList(footballers));  */
         	
         	/* Attivo i bottoni */
         	lblError.setText(null);
@@ -191,20 +195,21 @@ public class HomeController {
         assert btnChampionship != null : "fx:id=\"btnChampionship\" was not injected: check your FXML file 'Home.fxml'.";
         assert btnMarketPage != null : "fx:id=\"btnMarketPage\" was not injected: check your FXML file 'Home.fxml'.";
         assert btnTeam != null : "fx:id=\"btnTeam\" was not injected: check your FXML file 'Home.fxml'.";
-        assert colName != null : "fx:id=\"colName\" was not injected: check your FXML file 'Home.fxml'.";
+    /*  assert colName != null : "fx:id=\"colName\" was not injected: check your FXML file 'Home.fxml'.";
         assert colRole != null : "fx:id=\"colRole\" was not injected: check your FXML file 'Home.fxml'.";
         assert colValue != null : "fx:id=\"colValue\" was not injected: check your FXML file 'Home.fxml'.";
         assert colWage != null : "fx:id=\"colWage\" was not injected: check your FXML file 'Home.fxml'.";
         assert colYear != null : "fx:id=\"colYear\" was not injected: check your FXML file 'Home.fxml'.";
+        assert tabPlayers != null : "fx:id=\"tabPlayers\" was not injected: check your FXML file 'Home.fxml'."; */
         assert lblError != null : "fx:id=\"lblError\" was not injected: check your FXML file 'Home.fxml'.";
-        assert tabPlayers != null : "fx:id=\"tabPlayers\" was not injected: check your FXML file 'Home.fxml'.";
         
         /* Per la tabella */
-        this.colName.setCellValueFactory(new PropertyValueFactory<Footballer, String>("name"));
+        
+     /* this.colName.setCellValueFactory(new PropertyValueFactory<Footballer, String>("name"));
         this.colRole.setCellValueFactory(new PropertyValueFactory<Footballer, String>("best_role"));
         this.colYear.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("age"));
         this.colValue.setCellValueFactory(new PropertyValueFactory<Footballer, Double>("value"));
-        this.colWage.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("wage"));
+        this.colWage.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("wage"));  */
 
         /* Disattivo i bottoni */
         this.btnTeam.setDisable(true);

@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -44,7 +45,10 @@ public class BuyController {
     private Button btnSimulate; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbIndexes"
-    private ChoiceBox<String> cmbIndexes; // Value injected by FXMLLoader
+    private ComboBox<String> cmbIndexes; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="cmbRoles"
+    private ComboBox<String> cmbRoles; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
@@ -59,6 +63,7 @@ public class BuyController {
 		super();
 	}
 
+    /*AGGIUNGERE ANCORA IL RUOLO*/
 	@FXML
     void doBuy(ActionEvent event) {
 
@@ -69,8 +74,9 @@ public class BuyController {
     	
     	//OK CI ENTRA ENTRA
     	String index = cmbIndexes.getValue();
+    	String role = cmbRoles.getValue();
     	
-    	if(index!=null) {
+    	if(index!=null && role!=null) {
     		
     		String wageStr = txtWage.getText();
     		String valueStr = txtValue.getText();
@@ -80,19 +86,23 @@ public class BuyController {
     			int wage = Integer.parseInt(wageStr);
     			int value = Integer.parseInt(valueStr);
     			
-    	    	List<Footballer> result = model.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, model.getSelectedTeam(), wage, value);
+    	    	List<Footballer> result = model.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, model.getSelectedTeam(), wage, value);
     	    	
-    	    	txtResult.appendText("I 5 migliori calciatori che migliorano l'indice selezionato con salario e costo all'interno dei valori inseriti sono:\n");
+    	    	int i = 0;
+    	    	
+    	    	txtResult.appendText("I 5 migliori calciatori che rispettano le condizioni inserite e migliorano sia l'indice selezionato che la media degli indici della squadra sono in ordine:\n");
     	    	for(Footballer fi: result) {
-    	    		txtResult.appendText(fi.getName()+"\n");
+    	    		i++;
+    	    		txtResult.appendText(+i+" - "+fi.getName()+"\n");
     	    	}
+    	    	
     			
     		} catch (NumberFormatException e) {
     			txtResult.appendText("Perfavore inserire valori numerici per stipendio e valore massimi!");
     		}
     		
     	} else {
-    		txtResult.appendText("Perfavore selezionare un indice!");
+    		txtResult.appendText("Perfavore selezionare un indice e/o un ruolo!");
     	}
     	
     }
@@ -128,6 +138,7 @@ public class BuyController {
         assert btnHome != null : "fx:id=\"btnHome\" was not injected: check your FXML file 'Buy.fxml'.";
         assert btnSimulate != null : "fx:id=\"btnSimulate\" was not injected: check your FXML file 'Buy.fxml'.";
         assert cmbIndexes != null : "fx:id=\"cmbIndexes\" was not injected: check your FXML file 'Buy.fxml'.";
+        assert cmbRoles != null : "fx:id=\"cmbRoles\" was not injected: check your FXML file 'Buy.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Buy.fxml'.";
         assert txtValue != null : "fx:id=\"txtValue\" was not injected: check your FXML file 'Buy.fxml'.";
         assert txtWage != null : "fx:id=\"txtWage\" was not injected: check your FXML file 'Buy.fxml'.";
@@ -137,8 +148,9 @@ public class BuyController {
 	public void setModel(Model model) {
 		this.model = model;		
 		
-        /* Carico indici nella combo box */
+        /* Carico indici e ruoli nella combo box */
     	this.cmbIndexes.getItems().addAll(model.getAllIndexes());
+    	this.cmbRoles.getItems().addAll(model.getAllRoles());
 	}
 
 }

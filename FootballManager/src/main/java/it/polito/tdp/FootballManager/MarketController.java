@@ -81,13 +81,6 @@ public class MarketController {
 
     	List<Footballer> selected = tabPlayers.getSelectionModel().getSelectedItems();
     	
-    	/*for(Footballer fi: f) {
-        	txtResult.appendText(fi.toString());
-        	txtResult.appendText("\n");
-    	}
-    	OK LI PRENDE
-    	*/
-    	
     	/* Da qua faccio partire la ricorsione */
     	List<Footballer> result = model.init(selected);
     	    	
@@ -158,6 +151,9 @@ public class MarketController {
 		/* Carico la tabella */
     	List<Footballer> footballers = model.getFootballerByTeam(model.getSelectedTeam()); 	
     	tabPlayers.setItems(FXCollections.observableArrayList(footballers));
+    	
+    	/* Imposto la label con i valori medi */
+    	lblStats.setText(model.averageStatistics(model.getSelectedTeam()));
 		
 	}
 

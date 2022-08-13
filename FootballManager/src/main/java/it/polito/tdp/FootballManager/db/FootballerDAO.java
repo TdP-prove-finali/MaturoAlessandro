@@ -355,8 +355,11 @@ public class FootballerDAO {
 			return null;
 		}
 	}
+	//(index, role, club, mean, maxWage, maxValue, 10.0);
 
-	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, Club club, double mean, int maxWage, int maxValue, double meanTeam) {
+	//METTERE ANCORA MEDIA TEAM DALL'ALTRO LATO
+	//CONTROLLARE ANCORA CHE CLUB SIA DIVERSO
+	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double mean, int maxWage, int maxValue, double meanTeam) {
 		
 		List<Footballer> footballers = new LinkedList<>();
 		
@@ -365,11 +368,11 @@ public class FootballerDAO {
 		
 		String sql = "SELECT p.number, p.name, p.best_pos, p.club, p.age, p.value, p.wage, p.tec, p.pas, p.mar, p.pos, p.str "
 				+ "FROM playerdef p "
-				+ "WHERE p.wage <= ? AND ? >= ? AND p.value <= ?";
+				+ "WHERE p.wage <= ? AND ? >= ? AND p.value <= ? AND p.best_pos = ?";
 		
 		switch(index) {
 		
-		case "Techinque":
+		case "Technique":
 			indexStr = "p.tec";
 			break;
 		case "Marking":
@@ -396,6 +399,7 @@ public class FootballerDAO {
 			st.setString(2, indexStr);
 			st.setDouble(3, mean);
 			st.setInt(4, maxValue);
+			st.setString(5, role);
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -460,20 +464,14 @@ public class FootballerDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			//st.setInt(1, (footballer.getWage()*2));
-			//st.setDouble(2, (footballer.getValue()*2));
 			st.setInt(1, footballer.getWage());
 			st.setDouble(2, footballer.getValue()*1000000);
 			st.setString(3, footballer.getBest_role());
 			
 			ResultSet rs = st.executeQuery();
-			
-			//System.out.println("Medie da cnfrontare:\n");
-			
+						
 			while(rs.next()) {
-				
-				//System.out.println("C'è almeno un risultato");
-				
+								
 				double valueMln = ((double)(rs.getInt("value")))/(1000000);
 
 				
@@ -489,9 +487,7 @@ public class FootballerDAO {
 						rs.getInt("mar"),
 						rs.getInt("pos"),
 						rs.getInt("str"));	
-				
-				//System.out.println(this.getMediumStatsByPlayer(f)+"\n");
-				
+								
 				if(this.getMediumStatsByPlayer(f)>=meanIndexes) {
 					if(!f.equals(footballer)) {
 						footballers.add(f);						
@@ -514,9 +510,7 @@ public class FootballerDAO {
 		// tra l'altro occhio che così non va se tipo è 4 fai for(Footballer fi: ...)  e ragionaa con size 
 		
 		if(footballers.size()>0) {
-			
-			//System.out.println("Sono arrivato qua\n");
-			
+						
 			// QUA DEVO PRENDERE SOLO I MIGLIORI
 			
 			List<Footballer> bestTen = new LinkedList<Footballer>();
@@ -524,7 +518,6 @@ public class FootballerDAO {
 			for(Footballer fi: footballers) {
 				if(bestTen.size()<10) {
 					bestTen.add(fi);
-					//System.out.println(fi.getName()+"\n"); //ADESSO QUA FUNZIONA
 				}
 			}
 			

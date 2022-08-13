@@ -8,26 +8,24 @@ import it.polito.tdp.FootballManager.db.FootballerDAO;
 
 public class Model {
 	
-	private String selectedTeam;
+	/* Attributo per la squadra selezionata dall'utente */
+	private Club selectedTeam;
 	
-	public String getSelectedTeam() {
-		return selectedTeam;
-	}
-
-
-
-	public void setSelectedTeam(String selectedTeam) {
-		this.selectedTeam = selectedTeam;
-	}
-
-
-
+	/* Oggetti del DAO */
 	private FootballerDAO footballerDAO;
 	private ClubDAO clubDAO;
 	
-	//UTILY
+	/* Attributi utili */
 	private List<Club> clubs;
 	private List<String> championships;
+
+	/* Attributi per la parte ricorsiva*/
+	private List<Footballer> best;
+	private List<Footballer> possible;
+	private int totBest;
+	private int size;
+	
+	/* Attributi utili per la parte ricorsiva */
 	private List<String> ruoliUtilizzati;
 	private int numP;
 	private int numD;
@@ -35,143 +33,109 @@ public class Model {
 	private int numA;
 	private int sizeSelected;
 	
-	//PARTE RICORSIVA
-	private List<Footballer> best;
-	private List<Footballer> possible;
-	private int totBest;
-	private int size;
+	
+	
 	
 	public Model() {
+		/* Inizializzo i DAO*/
 		this.footballerDAO = new FootballerDAO();
 		this.clubDAO = new ClubDAO();
-		
-		clubs = this.getAllClubsObject();
-		
-		//DEVO CARICARE SOLO I 5 CAMPIONATI PIU' IMportanti
-		//ADESSO STO CARICANDO NEL MODEL
-		/*for(Club ci: clubs) {
-				this.chargeTeam(ci.getName());
-		}*/
-		
 	}
 	
 	
+	
+	
+	/**
+	 * Mi serve in HomeController quando devo caricare i club una
+	 * volta selezionato il campionato
+	 * @param championship
+	 * @return lista dei club di quel campionato
+	 */	
+	public List<Club> getAllClubsObjectByChampionship(String championship){
+		return this.clubDAO.getAllClubsObjectByChampionship(championship);
+	}
+	
+	
+	
+	
+	/**
+	 * Mi serve per caricare la tabella dei giocatori
+	 * In più ogni volta che lo carico imposto la lista dei giocatori anche nel club
+	 * @param club
+	 * @return lista dei calciatori di quel club
+	 */
+	public List<Footballer> getFootballerByTeam(Club club) {
 
-	private List<Club> getAllClubsObject() {
-		return this.clubDAO.getAllClubsObject();
-	}
-
-	public Footballer getFootballerByName(String name) {
-		return this.footballerDAO.getFootballerByName(name);
-	}
-	
-	public Footballer getFootballerByNumber(int number) {
-		return this.footballerDAO.getFootballerByNumber(number);
-	}
-	
-	public List<Footballer> getFootballerByTeam(String team) {
+		club.setFootballers(clubDAO.getFootballerByTeam(club));
 		
-		//COSI' OGNI VOLTA CARICA
-		if(this.clubs!=null) {
-			for(Club ci: this.clubs) {
-				if(ci.getName().compareTo(team)==0) {
-					ci.setFootballers((LinkedList<Footballer>) this.clubDAO.getFootballerByTeam(team));
-				}
-			}
-		}
-
-		
-		return this.clubDAO.getFootballerByTeam(team);
+		return this.clubDAO.getFootballerByTeam(club);
 	}
 	
-	public void chargeTeam(String team) {
-		
-		//COSI' OGNI VOLTA CARICA
-		if(this.clubs!=null) {
-			for(Club ci: this.clubs) {
-				if(ci.getName().compareTo(team)==0) {
-					ci.setFootballers((LinkedList<Footballer>) this.clubDAO.getFootballerByTeam(team));
-				}
-			}
-		}
-
+	
+	
+	
+	/* Metodi per statistiche medie team */
+	
+	public double totValue(Club club) {
+		return this.clubDAO.totValue(club);
 	}
 	
-	public List<Footballer> getFootballersByMaxWage(int maxWage) {
-		return this.footballerDAO.getFootballersByMaxWage(maxWage);
+	public double averageAge(Club club) {
+		return this.clubDAO.averageAge(club);		
 	}
 	
-	public List<Footballer> getFootballerWithMinMediumAndMaxSalary(Footballer footballer) {
-		return this.footballerDAO.getFootballerWithMinMediumAndMaxSalary(footballer);
+	public double averageWage(Club club) {
+		return this.clubDAO.averageWage(club);
 	}
 	
-	public List<String> getAllClubs(){
-		return this.clubDAO.getAllClubs();
-	}	
-	
-	public List<String> getAllClubsByChampionship(String championship){
-		return this.clubDAO.getAllClubsByChampionship(championship);
+	public double averageTec(Club club) {
+		return this.clubDAO.averageTec(club);
 	}
 	
-	public Club getClubByName(String name) {
-		return this.clubDAO.getClubByName(name);
+	public double averagePas(Club club) {
+		return this.clubDAO.averagePas(club);
 	}
 	
-	//AVERAGE E SUM
-	
-	public double averageAge(String team) {
-		return this.clubDAO.averageAge(team);		
+	public double averageMar(Club club) {
+		return this.clubDAO.averageMar(club);
 	}
 	
-	public double averageWage(String team) {
-		return this.clubDAO.averageWage(team);
+	public double averagePos(Club club) {
+		return this.clubDAO.averagePos(club);
 	}
 	
-	public double totValue(String team) {
-		return this.clubDAO.totValue(team);
+	public double averageStr(Club club) {
+		return this.clubDAO.averageStr(club);
 	}
 	
-	public double averageTec(String team) {
-		return this.clubDAO.averageTec(team);
+	
+	
+	
+	/**
+	 * Mi serve per mettere il testo nella labelStats di MarketController 
+	 * @param team
+	 * @return Stringa con tutti i valori
+	 */
+	public String averageStatistics(Club club) {
+			
+		String res = "Età media: "+this.averageAge(club)+"\n\n"+
+					 "Valore totale: "+this.totValue(club)+" M€\n\n"+
+					 "Tecnica: "+this.averageTec(club)+"\n\n"+
+					 "Passaggio: "+this.averagePas(club)+"\n\n"+
+					 "Marcamento: "+this.averageMar(club)+"\n\n"+
+					 "Posizionamento: "+this.averagePos(club)+"\n\n"+
+					 "Forza: "+this.averageStr(club)+"\n\n";
+		 
+		return res;		
 	}
 	
-	public double averagePas(String team) {
-		return this.clubDAO.averagePas(team);
-	}
 	
-	public double averageMar(String team) {
-		return this.clubDAO.averageMar(team);
-	}
 	
-	public double averagePos(String team) {
-		return this.clubDAO.averagePos(team);
-	}
 	
-	public double averageStr(String team) {
-		return this.clubDAO.averageStr(team);
-	}
-	
-	public String averageStatistics(String team) {
-		
-		String res = "";
-		
-		// Tolto statistiche medie a inizio stringa e stipendio medio 
-		
-		 res+=  "Età media: "+this.averageAge(team)+"\n\n"+
-				"Valore totale: "+this.totValue(team)+" M€\n\n"+
-				"Tecnica: "+this.averageTec(team)+"\n\n"+
-				"Passaggio: "+this.averagePas(team)+"\n\n"+
-				"Marcamento: "+this.averageMar(team)+"\n\n"+
-				"Posizionamento: "+this.averagePos(team)+"\n\n"+
-				"Forza: "+this.averageStr(team)+"\n\n";
-		
-		return res;
-		
-	}
-	
-	//PER MENU
+	/* Metodi per caricare le varie comboBox */
 	
 	public List<String> getAllChampionships(){
+		
 		List<String> result = new LinkedList<>();
 		
 		result.add("Spain (First Division)");
@@ -184,22 +148,46 @@ public class Model {
 		
 	}
 	
-	//PARTE 1
-	//OK DOVREBBE ANDARE
-	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String clubStr, int maxWage, int maxValue) {
+	public List<String> getAllIndexes() {
+		
+		List<String> result = new LinkedList<>();
+		
+		result.add("Techinique");
+		result.add("Marking");
+		result.add("Passing");
+		result.add("Strenght");
+		result.add("Positioning");
+		
+		return result;
+	}
+	
+	public List<String> getAllRoles() {
+		
+		List<String> result = new LinkedList<>();
+		
+		result.add("P");
+		result.add("D");
+		result.add("C");
+		result.add("A");
+		
+		return result;
+	}
+	
+	
+	
+	
+	/* Metodi per la pagina Buy.fxml 
+	 * SCRIVILO IN BLU */
+	
+	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, int maxWage, int maxValue) {
 		
 		double mean = 0.0;
 		
-		Club club = this.getClubByName(clubStr);
-		
-		//meanTeam non va
-		//double meanTeam = this.getMediumStatsByClub(club);
-		//DEVO METTERE CLUB COME OGGETTO
-		
-		this.chargeTeam(clubStr);
+		double meanTeam = this.getMediumStatsByClub(club);
+	
 		
 		switch(index) {
-			case "Techinque":
+			case "Technique":
 				mean = this.getMediumTechniqueByClub(club);
 				break;
 			case "Marking":
@@ -214,15 +202,14 @@ public class Model {
 			case "Positioning":
 				this.getMediumPositioningByClub(club);
 				break;	
-		}
+		}		
 		
-		
-		return this.footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, club, mean, maxWage, maxValue, 10.0);
-		
+		return this.footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, club, mean, maxWage, maxValue, meanTeam);
 		
 	}
 	
-	//PARTE RICORSIVA VERSIONE LISTA
+	/* Metodi per la parte ricorsiva della pagina Market.fxml */
+	
 	public List<Footballer> init(List<Footballer> selected) {
 		
 		this.size=selected.size();
@@ -231,23 +218,9 @@ public class Model {
 		best = new LinkedList<>();
 		List<Footballer> partial = new LinkedList<>();
 		
-		/* ME LI PRENDE TUTTI E DUE
-		 * for(Footballer fi: selected) {
-			System.out.println(fi.getName()+"\n");
-		}*/
-		
 		for(Footballer fi: selected) {
-			//System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+fi.getName()+"\n");
-
 			this.getPossibleFootballers(fi);
 		}
-		
-		for(Footballer fi: possible) {
-			System.out.println(fi.getName()+"\n");
-		}
-		
-		// FINO A QUA VA TUTTO
-
 		
 		this.numP=0;
 		this.numD=0;
@@ -265,9 +238,7 @@ public class Model {
 		this.sizeSelected = selected.size();
 		
 		recursion(partial, tot);
-		
-		System.out.println("RICORSIONE FINITA");
-		
+				
 		return best;
 	}
 
@@ -291,9 +262,7 @@ public class Model {
 			
 			
 			if(tot>this.totBest) {
-				System.out.println("Ho superato un tot>totBets\n");
 				if(checkRuoli(partial)) {
-					System.out.println("Ho superato un check ruoli\n");
 					this.best = new LinkedList<>(partial);
 					this.totBest=tot;
 				}
@@ -303,11 +272,6 @@ public class Model {
 		} else {
 			
 			for(Footballer fi: this.possible) {
-				//if(!partial.contains(fi) && checkClub(fi.getClub())) {
-				//!possible.contains(fi) questo per quanto scritto sopra
-				
-				//Footballer ha equals ho già controllato
-				
 				if(!partial.contains(fi)) {
 					
 					partial.add(fi);
@@ -328,26 +292,6 @@ public class Model {
 		
 	}
 
-	/*private List<Footballer> getPossiblePlayer(List<Footballer> selected) {
-		
-		
-		List<Footballer> result = new LinkedList<>();
-		
-		for(Footballer fi: selected) {
-			//DEVE AVERE SALARIO INFERIORE MEDIA INDICI SUPERIORI E VALORE MINORE
-			if(this.getPossibleFootballers(fi)!=null) {
-				for(Footballer fii: this.getPossibleFootballers(fi)) {
-					result.add(fii);
-				}
-			} else {
-				System.out.println("Lista Vuota\n");
-			}
-			
-		}
-		
-		
-		return result;
-	}*/
 
 
 
@@ -356,27 +300,21 @@ public class Model {
 	private void getPossibleFootballers(Footballer footballer) {
 		
 		double meanIndexes = this.averageStats(footballer);
-		
-		//System.out.println(meanIndexes+"\n"); //OK QUESTO LO PRENDE
-		
-		// NON MI PRENDE GIOCATORI
-		
+				
 		List<Footballer> result = footballerDAO.getPossibleFootballers(footballer, meanIndexes);
-		
-		//System.out.println("Sto aggiungendo a possible:"+result.size()+"\n");
-		
+				
 		for(Footballer fi: result) {
 			if(!this.possible.contains(fi)) {
 				this.possible.add(fi);
-				//System.out.println(fi.getName()+"\n");
 			}
 		}
 		
-		//System.out.println("FInito aggiunta");
 	}
 
 
 
+	/* Metodi che mi servono per la parte della ricorsione */
+	
 	private double averageStats(Footballer footballer) {
 		
 		double tot = 0.0;
@@ -390,6 +328,7 @@ public class Model {
 	}
 	
 	/* Se poi vuoi ragionare con medie ricordati di cambiare tutto con double */
+	
 	private int totIndexes(List<Footballer> selected) {
 		
 		int tot = 0;
@@ -422,15 +361,7 @@ public class Model {
 				this.numA++;
 			}
 		}
-		
-		
-		System.out.println("LISTA:\n");
-		System.out.println("P:"+this.numP+"\n");
-		System.out.println("D:"+this.numD+"\n");
-		System.out.println("C:"+this.numC+"\n");
-		System.out.println("A:"+this.numA+"\n");
-
-		
+				
 		return result;
 	}
 
@@ -456,42 +387,24 @@ public class Model {
 			}
 		}
 		
-		System.out.println("P:"+cntP+"\n");
-		System.out.println("D:"+cntD+"\n");
-		System.out.println("C:"+cntC+"\n");
-		System.out.println("A:"+cntA+"\n");
-		
-		
 		if(cntP!=this.numP) {
-			System.out.println("USCITO PORTI");
 			return false;
 		}
 		if(cntD!=this.numD) {
-			System.out.println("USCITO DIFENSORI");
 			return false;
 		}
 		if(cntC!=this.numC) {
-			System.out.println("USCITO CENTROCAMPISTI");
 			return false;
 		}
-		
-		System.out.println("cntA "+cntA+ " numA "+this.numA);
-
 		if(cntA!=this.numA) {
-			System.out.println("USCITO ATTACANTI");
 			return false;
 		}
 		
-		System.out.println("PASSATI");
 		return true;
 	}
 
 
-
-// FINO A QUA
-	
-	//C:\Users\User\Documents\MATURO_ALESSANDRO\UNIVERSITA\ANNO_3\SECONDO_SEMESTRE\TECNICHE_DI_PROGRAMMAZIONE\WORKSPACE\FootballManager\src\main\resources\fxml
-
+	//BOH
 
 	private boolean checkClub(String clubName) {
 		
@@ -552,63 +465,28 @@ public class Model {
 		
 	}
 	
+
 	
 	
-	//RICORSIONE CON PIU' GIOCATORI
-	
-	
-	//PUNTO 1
-	
-	public Footballer bestChoice(double maxWage, double maxValue, Club club) {
-		
-		Footballer footballer = null;
-		
-		//Il club mi servirà per calcolare le statistiche
-		
-		/*Magari aggiungi ancora il ruolo
-		 * poi puoi fare la versione in cui prendi la lista e le migliori 5 soluzioni*/
-		
-		club.setFootballers(this.getFootballerByTeam(club.getName()));
-		
-		double stats = this.getMediumStatsByClub(club);
-		
-		return this.footballerDAO.getFootballerBestChoice(maxWage, maxValue, stats);
-		
-	}
-	
-	public List<Footballer> bestChoices(double maxWage, double maxValue, Club club) {
-		
-		//Il club mi servirà per calcolare le statistiche
-		
-		/*Magari aggiungi ancora il ruolo
-		 * poi puoi fare la versione in cui prendi la lista e le migliori 5 soluzioni*/
-		
-		//System.out.println(club);
-		club.setFootballers(this.getFootballerByTeam(club.getName()));
-		double stats = this.getMediumStatsByClub(club); //non ci sono i giocatori del clu
-		
-		return this.footballerDAO.getFootballerBestChoices(maxWage, maxValue, stats);
-		
-	}
+	/* Metodi per calcolare gli indici medi dato un club */
 	
 	private double getMediumStatsByClub(Club club) {
 		
 		double mean = 0.0;
 		double tot = 0.0;
 		
-		for(Footballer footballer: club.getFootballers()) {
-			tot = footballer.getTechnique()+footballer.getPassing()+footballer.getMarking()+footballer.getPositioning()+footballer.getStrength();
-			//System.out.println(footballer);
+		List<Footballer> footballersTeam = this.getFootballerByTeam(club);
+		
+		for(Footballer fi: footballersTeam) {
+			tot += fi.getTechnique()+fi.getPassing()+fi.getMarking()+fi.getPositioning()+fi.getStrength();
 		}
 				
-		mean = tot/(double)(5*club.getFootballers().size());
+		mean = tot/(double)(5*footballersTeam.size());
 		
 		return mean;
 		
 	}
 	
-	
-	//INDICI MEDI
 	private double getMediumTechniqueByClub(Club club) {
 		
 		double mean = 0.0;
@@ -688,20 +566,120 @@ public class Model {
 		return mean;
 		
 	}
+	
+	/* Getters e setters per l'attributo selectedTeam */
+	public Club getSelectedTeam() {
+		return selectedTeam;
+	}
 
+	public void setSelectedTeam(Club selectedTeam) {
+		this.selectedTeam = selectedTeam;	
+		/* Ogni volta che chiamo questo metto la lista dei giocatori dentro il club */
+	}
+	
+	/* METODI NON PIU? USATI
+	public Footballer getFootballerByName(String name) {
+	return this.footballerDAO.getFootballerByName(name);
+	}
 
-
-	public List<String> getAllIndexes() {
+	public Footballer getFootballerByNumber(int number) {
+	return this.footballerDAO.getFootballerByNumber(number);
+	} 
+		public List<Footballer> getFootballersByMaxWage(int maxWage) {
+		return this.footballerDAO.getFootballersByMaxWage(maxWage);
+	}
+	
+	public List<Footballer> getFootballerWithMinMediumAndMaxSalary(Footballer footballer) {
+		return this.footballerDAO.getFootballerWithMinMediumAndMaxSalary(footballer);
+	}
+	
+	public List<String> getAllClubs(){
+		return this.clubDAO.getAllClubs();
+	}		
+	
+	private List<Club> getAllClubsObject() {
+		return this.clubDAO.getAllClubsObject();
+	}
+	
+	public void chargeTeam(String team) {
 		
-		List<String> result = new LinkedList<>();
+		//COSI' OGNI VOLTA CARICA
+		if(this.clubs!=null) {
+			for(Club ci: this.clubs) {
+				if(ci.getName().compareTo(team)==0) {
+					ci.setFootballers((LinkedList<Footballer>) this.clubDAO.getFootballerByTeam(team));
+				}
+			}
+		}
+
+	}
+	
+	private List<Footballer> getPossiblePlayer(List<Footballer> selected) {
 		
-		result.add("Techinque");
-		result.add("Marking");
-		result.add("Passing");
-		result.add("Strenght");
-		result.add("Positioning");
+		
+		List<Footballer> result = new LinkedList<>();
+		
+		for(Footballer fi: selected) {
+			//DEVE AVERE SALARIO INFERIORE MEDIA INDICI SUPERIORI E VALORE MINORE
+			if(this.getPossibleFootballers(fi)!=null) {
+				for(Footballer fii: this.getPossibleFootballers(fi)) {
+					result.add(fii);
+				}
+			} else {
+				System.out.println("Lista Vuota\n");
+			}
+			
+		}
+		
 		
 		return result;
 	}
+	
+	public Footballer bestChoice(double maxWage, double maxValue, Club club) {
+		
+		Footballer footballer = null;
+		
+		//Il club mi servirà per calcolare le statistiche
+		
+			Magari aggiungi ancora il ruolo
+		 	poi puoi fare la versione in cui prendi la lista e le migliori 5 soluzioni
+		
+		club.setFootballers(this.getFootballerByTeam(club.getName()));
+		
+		double stats = this.getMediumStatsByClub(club);
+		
+		return this.footballerDAO.getFootballerBestChoice(maxWage, maxValue, stats);
+		
+	}
+	
+	public List<Footballer> bestChoices(double maxWage, double maxValue, Club club) {
+		
+		//Il club mi servirà per calcolare le statistiche
+		
+			Magari aggiungi ancora il ruolo
+		 	poi puoi fare la versione in cui prendi la lista e le migliori 5 soluzioni
+		
+		//System.out.println(club);
+		club.setFootballers(this.getFootballerByTeam(club.getName()));
+		double stats = this.getMediumStatsByClub(club); //non ci sono i giocatori del clu
+		
+		return this.footballerDAO.getFootballerBestChoices(maxWage, maxValue, stats);
+		
+	}
+	
+	Metodo utili 
+		
+	public Club getClubByName(String name) {
+		return this.clubDAO.getClubByName(name);
+	}
+	
+	public List<String> getAllClubsByChampionship(String championship){
+		return this.clubDAO.getAllClubsByChampionship(championship);
+	}
+	
+	
+	
+	*/
+
 	
 }
