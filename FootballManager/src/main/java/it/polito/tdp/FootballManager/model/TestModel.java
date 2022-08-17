@@ -8,7 +8,7 @@ public class TestModel {
 		// TODO Auto-generated method stub
 		Model model = new Model();
 		
-		Footballer f1 = model.getFootballerByName("Lionel Messi");
+		/*ootballer f1 = model.getFootballerByName("Lionel Messi");
 		System.out.println("Get footballer by name");
 		System.out.println(f1);
 		
@@ -16,11 +16,11 @@ public class TestModel {
 		System.out.println("Get footballer by number");
 		System.out.println(f2);
 		
-		/*List<Footballer> footballers1 = model.getFootballerByTeam("Juventus");
+		List<Footballer> footballers1 = model.getFootballerByTeam("Juventus");
 		System.out.println("Get footballers by team");
 		for(Footballer f: footballers1) {
 			System.out.println(f);
-		}*/
+		}
 		
 		List<Footballer> footballers2 = model.getFootballerWithMinMediumAndMaxSalary(f2);
 		System.out.println("Get footballers by mean and salary:");
@@ -38,11 +38,11 @@ public class TestModel {
 		System.out.println("Average pos: "+model.averagePos("Juventus"));
 		System.out.println("Average str: "+model.averageStr("Juventus"));
 		System.out.println("Average tec: "+model.averageTec("Juventus"));
-		*/
 		
-		//List<Footballer> footballersJuventus = model.getFootballerByTeam("Juventus");
 		
-		/*List<Footballer> footballers3 = model.bestChoices(300000, 20000000, model.getClubByName("Juventus"));
+		List<Footballer> footballersJuventus = model.getFootballerByTeam("Juventus");
+		
+		List<Footballer> footballers3 = model.bestChoices(300000, 20000000, model.getClubByName("Juventus"));
 		System.out.println("Get footballers best choices:");
 		for(Footballer f: footballers3) {
 			System.out.println(f);
@@ -50,14 +50,14 @@ public class TestModel {
 		
 		Footballer f4 = model.bestChoice(300000, 20000000, model.getClubByName("Juventus"));
 		System.out.println("Get footballer best choice:");
-		System.out.println(f4);*/
+		System.out.println(f4);
 		
 		model.chargeTeam("Juventus");
 		List<Footballer> footballers5 = model.getFootballersMaxSalaryAndMaxValueAndBetterIndex("Passing", "Juventus", 1000000, 300000000);
 		System.out.println("Get footballers betterIndex:");
 		for(Footballer f: footballers5) {
 			System.out.println(f);
-		}
+		}*/
 		
 
 		

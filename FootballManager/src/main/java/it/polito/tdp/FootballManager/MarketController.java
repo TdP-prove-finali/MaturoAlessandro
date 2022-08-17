@@ -18,6 +18,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -73,6 +77,15 @@ public class MarketController {
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="assex"
+    private CategoryAxis assex; // Value injected by FXMLLoader
+
+    @FXML // fx:id="assey"
+    private NumberAxis assey; // Value injected by FXMLLoader
+
+    @FXML // fx:id="grafico"
+    private BarChart<String, Number> grafico; // Value injected by FXMLLoader
 
     @FXML
     void doRecursion(ActionEvent event) {
@@ -132,6 +145,9 @@ public class MarketController {
         assert lblStats != null : "fx:id=\"lblStats\" was not injected: check your FXML file 'Market.fxml'.";
         assert tabPlayers != null : "fx:id=\"tabPlayers\" was not injected: check your FXML file 'Market.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Market.fxml'.";
+        assert grafico != null : "fx:id=\"grafico\" was not injected: check your FXML file 'Market.fxml'.";
+        assert assex != null : "fx:id=\"assex\" was not injected: check your FXML file 'Market.fxml'.";
+        assert assey != null : "fx:id=\"assey\" was not injected: check your FXML file 'Market.fxml'.";
 
 		/* Per la tabella */
         this.colName.setCellValueFactory(new PropertyValueFactory<Footballer, String>("name"));
@@ -142,6 +158,8 @@ public class MarketController {
         
         /* Per permettere la selezione multipla */
         tabPlayers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+       
 
     }
 
@@ -155,6 +173,17 @@ public class MarketController {
     	/* Imposto la label con i valori medi */
     	lblStats.setText(model.averageStatistics(model.getSelectedTeam()));
 		
+    	 /* Imposto il grafico */
+        XYChart.Series<String, Number> set1= new XYChart.Series<>();
+        
+        set1.getData().add(new XYChart.Data<String, Number>("TEC", model.averageTec(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("FOR", model.averageStr(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("MAR", model.averageMar(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("POS", model.averagePos(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("PAS", model.averagePas(model.getSelectedTeam())));
+
+        
+        grafico.getData().add(set1);
 	}
 
 }

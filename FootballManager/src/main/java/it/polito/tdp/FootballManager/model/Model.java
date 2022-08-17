@@ -117,14 +117,21 @@ public class Model {
 	 * @return Stringa con tutti i valori
 	 */
 	public String averageStatistics(Club club) {
+		
+		this.setNumberPlayersPerRole(club.getFootballers());
 			
 		String res = "Età media: "+this.averageAge(club)+"\n\n"+
 					 "Valore totale: "+this.totValue(club)+" M€\n\n"+
-					 "Tecnica: "+this.averageTec(club)+"\n\n"+
+					/* "Tecnica: "+this.averageTec(club)+"\n\n"+
 					 "Passaggio: "+this.averagePas(club)+"\n\n"+
 					 "Marcamento: "+this.averageMar(club)+"\n\n"+
 					 "Posizionamento: "+this.averagePos(club)+"\n\n"+
-					 "Forza: "+this.averageStr(club)+"\n\n";
+					 "Forza: "+this.averageStr(club)+"\n\n";*/
+					 "Valore totale: "+this.averageWage(club)+" (€/week)\n\n"+
+					 "Numero portieri: "+this.numP+"\n\n"+
+					 "Numero difensori: "+this.numD+"\n\n"+
+					 "Numero centrocampisti: "+this.numC+"\n\n"+
+					 "Numero attaccanti: "+this.numA;
 		 
 		return res;		
 	}
@@ -363,6 +370,31 @@ public class Model {
 		}
 				
 		return result;
+	}
+	
+	private void setNumberPlayersPerRole(List<Footballer> selected) {
+		
+		this.numP=0;
+		this.numD=0;
+		this.numC=0;
+		this.numA=0;
+		
+		for(Footballer fi: selected) {			
+			if(fi.getBest_role().compareTo("P")==0) {
+				this.numP++;
+			}
+			if(fi.getBest_role().compareTo("D")==0) {
+				this.numD++;
+			}
+			if(fi.getBest_role().compareTo("C")==0) {
+				this.numC++;
+			}
+			if(fi.getBest_role().compareTo("A")==0) {
+				this.numA++;
+			}
+		}
+				
+
 	}
 
 	private boolean checkRuoli(List<Footballer> partial) {
