@@ -1,5 +1,6 @@
 package it.polito.tdp.FootballManager.model;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,7 +53,12 @@ public class Model {
 	 * @return lista dei club di quel campionato
 	 */	
 	public List<Club> getAllClubsObjectByChampionship(String championship){
-		return this.clubDAO.getAllClubsObjectByChampionship(championship);
+		
+		List<Club> result = clubDAO.getAllClubsObjectByChampionship(championship);
+		
+		Collections.sort(result, new ComparatorTeamsByName());
+		
+		return result;
 	}
 	
 	
@@ -184,14 +190,14 @@ public class Model {
 	
 	
 	/* Metodi per la pagina Buy.fxml 
-	 * SCRIVILO IN BLU */
+	 * SCRIVILO IN BLU 
+	 * index, role, model.getSelectedTeam(), wage, value*/
 	
-	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, int maxWage, int maxValue) {
+	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, int maxWage, int maxValueMln) {
 		
 		double mean = 0.0;
 		
 		double meanTeam = this.getMediumStatsByClub(club);
-	
 		
 		switch(index) {
 			case "Technique":
@@ -210,6 +216,9 @@ public class Model {
 				this.getMediumPositioningByClub(club);
 				break;	
 		}		
+		
+		//OK SCRITTO GIUSTO IL MLN
+		int maxValue = maxValueMln*1000000;
 		
 		return this.footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, club, mean, maxWage, maxValue, meanTeam);
 		

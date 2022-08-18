@@ -17,6 +17,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -58,21 +62,28 @@ public class BuyController {
 
     @FXML // fx:id="txtWage"
     private TextField txtWage; // Value injected by FXMLLoader  
+    
+    @FXML // fx:id="grafico"
+    private BarChart<String, Number> grafico; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="assex"
+    private CategoryAxis assex; // Value injected by FXMLLoader
+
+    @FXML // fx:id="assey"
+    private NumberAxis assey; // Value injected by FXMLLoader
+    
+    
 
     public BuyController() {
 		super();
 	}
 
-    /*AGGIUNGERE ANCORA IL RUOLO*/
+
 	@FXML
     void doBuy(ActionEvent event) {
-
-    	// Dovrai mettere tipo selectedTeam in model e prenderlo
-    	String team = "";
     	
     	txtResult.clear();
     	
-    	//OK CI ENTRA ENTRA
     	String index = cmbIndexes.getValue();
     	String role = cmbRoles.getValue();
     	
@@ -135,10 +146,13 @@ public class BuyController {
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
+        assert assex != null : "fx:id=\"assex\" was not injected: check your FXML file 'Buy.fxml'.";
+        assert assey != null : "fx:id=\"assey\" was not injected: check your FXML file 'Buy.fxml'.";
         assert btnHome != null : "fx:id=\"btnHome\" was not injected: check your FXML file 'Buy.fxml'.";
         assert btnSimulate != null : "fx:id=\"btnSimulate\" was not injected: check your FXML file 'Buy.fxml'.";
         assert cmbIndexes != null : "fx:id=\"cmbIndexes\" was not injected: check your FXML file 'Buy.fxml'.";
         assert cmbRoles != null : "fx:id=\"cmbRoles\" was not injected: check your FXML file 'Buy.fxml'.";
+        assert grafico != null : "fx:id=\"grafico\" was not injected: check your FXML file 'Buy.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Buy.fxml'.";
         assert txtValue != null : "fx:id=\"txtValue\" was not injected: check your FXML file 'Buy.fxml'.";
         assert txtWage != null : "fx:id=\"txtWage\" was not injected: check your FXML file 'Buy.fxml'.";
@@ -151,6 +165,17 @@ public class BuyController {
         /* Carico indici e ruoli nella combo box */
     	this.cmbIndexes.getItems().addAll(model.getAllIndexes());
     	this.cmbRoles.getItems().addAll(model.getAllRoles());
+    	
+   	 /* Imposto il grafico */
+        XYChart.Series<String, Number> set1= new XYChart.Series<>();
+        
+        set1.getData().add(new XYChart.Data<String, Number>("TEC", model.averageTec(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("FOR", model.averageStr(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("MAR", model.averageMar(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("POS", model.averagePos(model.getSelectedTeam())));
+        set1.getData().add(new XYChart.Data<String, Number>("PAS", model.averagePas(model.getSelectedTeam())));
+
+        grafico.getData().add(set1);
 	}
 
 }

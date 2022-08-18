@@ -359,6 +359,7 @@ public class FootballerDAO {
 
 	//METTERE ANCORA MEDIA TEAM DALL'ALTRO LATO
 	//CONTROLLARE ANCORA CHE CLUB SIA DIVERSO
+	//index, role, club, mean, maxWage, maxValue, meanTeam
 	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double mean, int maxWage, int maxValue, double meanTeam) {
 		
 		List<Footballer> footballers = new LinkedList<>();
@@ -429,7 +430,7 @@ public class FootballerDAO {
 					footballers.add(f);
 					cnt++;
 					if(cnt>=5) {
-						stay=false;
+						//stay=false;
 						break;
 					}
 				}
