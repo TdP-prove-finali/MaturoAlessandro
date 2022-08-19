@@ -191,7 +191,7 @@ public class FootballerDAO {
 						rs.getInt("pos"),
 						rs.getInt("str"));	
 				
-				if(this.getMediumStatsByPlayer(f)>=min && f.getWage()!=0 && footballer.getBest_role().compareTo(f.getBest_role())==0) {
+				if(this.getMediumStatsByPlayer(f)>=min && f.getWage()!=0 && footballer.getBest_pos().compareTo(f.getBest_pos())==0) {
 					footballers.add(f);
 				}
 						
@@ -360,7 +360,7 @@ public class FootballerDAO {
 	//METTERE ANCORA MEDIA TEAM DALL'ALTRO LATO
 	//CONTROLLARE ANCORA CHE CLUB SIA DIVERSO
 	//index, role, club, mean, maxWage, maxValue, meanTeam
-	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double mean, int maxWage, int maxValue, double meanTeam) {
+	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double mean, double maxWage, double maxValue, double meanTeam) {
 		
 		List<Footballer> footballers = new LinkedList<>();
 		
@@ -369,7 +369,7 @@ public class FootballerDAO {
 		
 		String sql = "SELECT p.number, p.name, p.best_pos, p.club, p.age, p.value, p.wage, p.tec, p.pas, p.mar, p.pos, p.str "
 				+ "FROM playerdef p "
-				+ "WHERE p.wage <= ? AND ? >= ? AND p.value <= ? AND p.best_pos = ?";
+				+ "WHERE p.wage <= ? AND ? >= ? AND p.value <= ? AND p.best_pos = ? AND p.club <> ?";
 		
 		switch(index) {
 		
@@ -396,11 +396,12 @@ public class FootballerDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setInt(1, maxWage);
+			st.setDouble(1, maxWage);
 			st.setString(2, indexStr);
 			st.setDouble(3, mean);
-			st.setInt(4, maxValue);
+			st.setDouble(4, maxValue);
 			st.setString(5, role);
+			st.setString(6, club.getName());
 			
 			ResultSet rs = st.executeQuery();
 			
@@ -467,7 +468,7 @@ public class FootballerDAO {
 			
 			st.setInt(1, footballer.getWage());
 			st.setDouble(2, footballer.getValue()*1000000);
-			st.setString(3, footballer.getBest_role());
+			st.setString(3, footballer.getBest_pos());
 			
 			ResultSet rs = st.executeQuery();
 						

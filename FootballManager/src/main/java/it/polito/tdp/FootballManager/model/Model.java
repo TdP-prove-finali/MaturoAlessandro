@@ -25,6 +25,7 @@ public class Model {
 	private List<Footballer> possible;
 	private int totBest;
 	private int size;
+	private boolean ok;
 	
 	/* Attributi utili per la parte ricorsiva */
 	private List<String> ruoliUtilizzati;
@@ -193,7 +194,7 @@ public class Model {
 	 * SCRIVILO IN BLU 
 	 * index, role, model.getSelectedTeam(), wage, value*/
 	
-	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, int maxWage, int maxValueMln) {
+	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double maxWage, double maxValueMln) {
 		
 		double mean = 0.0;
 		
@@ -218,10 +219,29 @@ public class Model {
 		}		
 		
 		//OK SCRITTO GIUSTO IL MLN
-		int maxValue = maxValueMln*1000000;
+		double maxValue = maxValueMln*1000000;
 		
-		return this.footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, club, mean, maxWage, maxValue, meanTeam);
+		List<Footballer> result = footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, club, mean, maxWage, maxValue, meanTeam);
 		
+		switch(index) {
+		case "Technique":
+			Collections.sort(result, new ComparatorPlayersByTec());
+			break;
+		case "Marking":
+			Collections.sort(result, new ComparatorPlayersByMar());
+			break;
+		case "Passing":
+			Collections.sort(result, new ComparatorPlayersByPas());
+			break;
+		case "Strenght":
+			Collections.sort(result, new ComparatorPlayersByStr());
+			break;
+		case "Positioning":
+			Collections.sort(result, new ComparatorPlayersByPos());
+			break;	
+	}	
+		
+		return result;
 	}
 	
 	/* Metodi per la parte ricorsiva della pagina Market.fxml */
@@ -230,12 +250,18 @@ public class Model {
 		
 		this.size=selected.size();
 		
-		possible = new LinkedList<>();
+		possible = new LinkedList<>(); /* così ogni volta che rientra ti pulisce la lista possible */
 		best = new LinkedList<>();
 		List<Footballer> partial = new LinkedList<>();
 		
+		ok=true;
+		
 		for(Footballer fi: selected) {
 			this.getPossibleFootballers(fi);
+		}
+		
+		if(ok==false) {
+			return null;
 		}
 		
 		this.numP=0;
@@ -252,6 +278,7 @@ public class Model {
 		//CAPIRE SE RAGIONARE CON MEDIA O TOTALE
 		
 		this.sizeSelected = selected.size();
+		
 		
 		recursion(partial, tot);
 				
@@ -318,11 +345,15 @@ public class Model {
 		double meanIndexes = this.averageStats(footballer);
 				
 		List<Footballer> result = footballerDAO.getPossibleFootballers(footballer, meanIndexes);
-				
-		for(Footballer fi: result) {
-			if(!this.possible.contains(fi)) {
-				this.possible.add(fi);
+		
+		if(result!=null) {
+			for(Footballer fi: result) {
+				if(!this.possible.contains(fi)) {
+					this.possible.add(fi);
+				}
 			}
+		} else {
+			this.ok=false;
 		}
 		
 	}
@@ -362,18 +393,18 @@ public class Model {
 		List<String> result = new LinkedList<>();
 		
 		for(Footballer fi: selected) {
-			result.add(fi.getBest_role());
+			result.add(fi.getBest_pos());
 			
-			if(fi.getBest_role().compareTo("P")==0) {
+			if(fi.getBest_pos().compareTo("P")==0) {
 				this.numP++;
 			}
-			if(fi.getBest_role().compareTo("D")==0) {
+			if(fi.getBest_pos().compareTo("D")==0) {
 				this.numD++;
 			}
-			if(fi.getBest_role().compareTo("C")==0) {
+			if(fi.getBest_pos().compareTo("C")==0) {
 				this.numC++;
 			}
-			if(fi.getBest_role().compareTo("A")==0) {
+			if(fi.getBest_pos().compareTo("A")==0) {
 				this.numA++;
 			}
 		}
@@ -389,16 +420,16 @@ public class Model {
 		this.numA=0;
 		
 		for(Footballer fi: selected) {			
-			if(fi.getBest_role().compareTo("P")==0) {
+			if(fi.getBest_pos().compareTo("P")==0) {
 				this.numP++;
 			}
-			if(fi.getBest_role().compareTo("D")==0) {
+			if(fi.getBest_pos().compareTo("D")==0) {
 				this.numD++;
 			}
-			if(fi.getBest_role().compareTo("C")==0) {
+			if(fi.getBest_pos().compareTo("C")==0) {
 				this.numC++;
 			}
-			if(fi.getBest_role().compareTo("A")==0) {
+			if(fi.getBest_pos().compareTo("A")==0) {
 				this.numA++;
 			}
 		}
@@ -414,16 +445,16 @@ public class Model {
 		int cntA=0;
 		
 		for(Footballer fi: partial) {
-			if(fi.getBest_role().compareTo("P")==0) {
+			if(fi.getBest_pos().compareTo("P")==0) {
 				cntP++;
 			}
-			if(fi.getBest_role().compareTo("D")==0) {
+			if(fi.getBest_pos().compareTo("D")==0) {
 				cntD++;
 			}
-			if(fi.getBest_role().compareTo("C")==0) {
+			if(fi.getBest_pos().compareTo("C")==0) {
 				cntC++;
 			}
-			if(fi.getBest_role().compareTo("A")==0) {
+			if(fi.getBest_pos().compareTo("A")==0) {
 				cntA++;
 			}
 		}

@@ -96,11 +96,17 @@ public class MarketController {
     	
     	/* Da qua faccio partire la ricorsione */
     	List<Footballer> result = model.init(selected);
-    	    	
-    	txtResult.appendText("La soluzione migliore trovata a partire dai giocatori selezionati per la vendita è:\n");
-    	for(Footballer fi: result) {
-    		txtResult.appendText(fi.getName()+"\n");
+    	
+    	if(result.size()!=0) {
+        	txtResult.appendText("La soluzione migliore trovata a partire dai giocatori selezionati per la vendita è:\n");
+        	for(Footballer fi: result) {
+        		txtResult.appendText(fi.getName()+"\n");
+        	}
+    	} else {
+    		txtResult.appendText("Non sono presenti soluzioni che migliorano gli indici della squadra.");
     	}
+    	    	
+
     	
     }
 
@@ -151,7 +157,7 @@ public class MarketController {
 
 		/* Per la tabella */
         this.colName.setCellValueFactory(new PropertyValueFactory<Footballer, String>("name"));
-        this.colRole.setCellValueFactory(new PropertyValueFactory<Footballer, String>("best_role"));
+        this.colRole.setCellValueFactory(new PropertyValueFactory<Footballer, String>("best_pos"));
         this.colYear.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("age"));
         this.colValue.setCellValueFactory(new PropertyValueFactory<Footballer, Double>("value"));
         this.colWage.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("wage"));

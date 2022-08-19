@@ -8,7 +8,7 @@ public class Footballer {
 	
 	private int id;
 	private String name;
-	private String best_role;
+	private String best_pos;
 	private String club;
 	private int age;
 	private double value;
@@ -24,7 +24,7 @@ public class Footballer {
 		super();
 		this.id = id;
 		this.name = name;
-		this.best_role = best_role;
+		this.best_pos = best_role;
 		this.club = club;
 		this.age = age;
 		this.wage = wage;
@@ -53,12 +53,12 @@ public class Footballer {
 		this.name = name;
 	}
 
-	public String getBest_role() {
-		return best_role;
+	public String getBest_pos() {
+		return best_pos;
 	}
 
-	public void setBest_role(String best_role) {
-		this.best_role = best_role;
+	public void setBest_pos(String best_pos) {
+		this.best_pos = best_pos;
 	}
 
 	public String getClub() {
@@ -135,7 +135,7 @@ public class Footballer {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(age, best_role, club, id, marking, name, passing, positioning, strength, technique, value,
+		return Objects.hash(age, best_pos, club, id, marking, name, passing, positioning, strength, technique, value,
 				wage);
 	}
 
@@ -148,7 +148,7 @@ public class Footballer {
 		if (getClass() != obj.getClass())
 			return false;
 		Footballer other = (Footballer) obj;
-		return age == other.age && Objects.equals(best_role, other.best_role) && Objects.equals(club, other.club)
+		return age == other.age && Objects.equals(best_pos, other.best_pos) && Objects.equals(club, other.club)
 				&& id == other.id && marking == other.marking && Objects.equals(name, other.name)
 				&& passing == other.passing && positioning == other.positioning && strength == other.strength
 				&& technique == other.technique && value == other.value && wage == other.wage;
@@ -156,43 +156,10 @@ public class Footballer {
 
 	@Override
 	public String toString() {
-		return "Footballer [id=" + id + ", name=" + name + ", best_role=" + best_role + ", club=" + club + ", age="
+		return "Footballer [id=" + id + ", name=" + name + ", best_role=" + best_pos + ", club=" + club + ", age="
 				+ age + ", wage=" + wage + ", value=" + value + ", technique=" + technique + ", passing=" + passing
 				+ ", marking=" + marking + ", positioning=" + positioning + ", strength=" + strength + "]";
 	}
-	
-	/*	public void setRuolo() {
-		switch (posizione.trim()) {
-		case "GK": ruolo = new SimpleStringProperty("portiere"); break;
-		case "RB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "CB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "LCB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "RCB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "LB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "RWB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "LWB": ruolo = new SimpleStringProperty("difensore"); break;
-		case "CDM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "LDM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "RDM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "CM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "CAM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "RAM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "LAM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "LCM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "RCM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "RM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "LM": ruolo = new SimpleStringProperty("centrocampista"); break;
-		case "RW": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "LW": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "CF": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "RF": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "LF": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "LS": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "RS": ruolo = new SimpleStringProperty("attaccante"); break;
-		case "ST": ruolo = new SimpleStringProperty("attaccante"); break;
-		}
-	}*/
-	
 	
 	
 	

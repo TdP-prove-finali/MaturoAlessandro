@@ -94,18 +94,23 @@ public class BuyController {
     		
     		try {
     			
-    			int wage = Integer.parseInt(wageStr);
-    			int value = Integer.parseInt(valueStr);
+    			double wage = Double.parseDouble(wageStr);
+    			double value = Double.parseDouble(valueStr);
     			
     	    	List<Footballer> result = model.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, model.getSelectedTeam(), wage, value);
     	    	
     	    	int i = 0;
     	    	
-    	    	txtResult.appendText("I 5 migliori calciatori che rispettano le condizioni inserite e migliorano sia l'indice selezionato che la media degli indici della squadra sono in ordine:\n");
-    	    	for(Footballer fi: result) {
-    	    		i++;
-    	    		txtResult.appendText(+i+" - "+fi.getName()+"\n");
+    	    	if(result.size()!=0) {
+    	    		txtResult.appendText("I 5 migliori calciatori acquistabili sono in ordine:\n");
+        	    	for(Footballer fi: result) {
+        	    		i++;
+        	    		txtResult.appendText(+i+" - "+fi.getName()+"\n");
+        	    	}
+    	    	} else {
+    	    		txtResult.appendText("Non sono presenti calciatori che migliorano gli indici e rispettano i vincoli inseriti.");
     	    	}
+    	    	
     	    	
     			
     		} catch (NumberFormatException e) {
