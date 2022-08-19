@@ -18,7 +18,6 @@ public class Model {
 	
 	/* Attributi utili */
 	private List<Club> clubs;
-	private List<String> championships;
 
 	/* Attributi per la parte ricorsiva*/
 	private List<Footballer> best;
@@ -28,7 +27,6 @@ public class Model {
 	private boolean ok;
 	
 	/* Attributi utili per la parte ricorsiva */
-	private List<String> ruoliUtilizzati;
 	private int numP;
 	private int numD;
 	private int numC;
@@ -91,8 +89,8 @@ public class Model {
 		return this.clubDAO.averageAge(club);		
 	}
 	
-	public double averageWage(Club club) {
-		return this.clubDAO.averageWage(club);
+	public int averageWage(Club club) {
+		return (int)this.clubDAO.averageWage(club);
 	}
 	
 	public double averageTec(Club club) {
@@ -134,7 +132,7 @@ public class Model {
 					 "Marcamento: "+this.averageMar(club)+"\n\n"+
 					 "Posizionamento: "+this.averagePos(club)+"\n\n"+
 					 "Forza: "+this.averageStr(club)+"\n\n";*/
-					 "Valore totale: "+this.averageWage(club)+" (€/week)\n\n"+
+					 "Stipendio medio: "+this.averageWage(club)+" (€/week)\n\n"+
 					 "Numero portieri: "+this.numP+"\n\n"+
 					 "Numero difensori: "+this.numD+"\n\n"+
 					 "Numero centrocampisti: "+this.numC+"\n\n"+
@@ -191,8 +189,7 @@ public class Model {
 	
 	
 	/* Metodi per la pagina Buy.fxml 
-	 * SCRIVILO IN BLU 
-	 * index, role, model.getSelectedTeam(), wage, value*/
+	 * SCRIVILO IN BLU */
 	
 	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double maxWage, double maxValueMln) {
 		
@@ -218,10 +215,14 @@ public class Model {
 				break;	
 		}		
 		
-		//OK SCRITTO GIUSTO IL MLN
 		double maxValue = maxValueMln*1000000;
 		
 		List<Footballer> result = footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, club, mean, maxWage, maxValue, meanTeam);
+		
+		/* Adesso ordino il risultato per media indici
+		 * Questo lo faccio perchè io uso solo 5 indici e non tutti quindi l'ordine potrebbe essere diverso */
+		
+		Collections.sort(result, new ComparatorPlayersByTotIndexes());
 		
 		switch(index) {
 		case "Technique":
@@ -269,14 +270,12 @@ public class Model {
 		this.numC=0;
 		this.numA=0;	
 		
-		ruoliUtilizzati = this.caricaRuoli(selected);
+		this.caricaRuoli(selected);
 
 		
 		this.totBest=this.totIndexes(selected);
 		int tot=0;
-		
-		//CAPIRE SE RAGIONARE CON MEDIA O TOTALE
-		
+				
 		this.sizeSelected = selected.size();
 		
 		
@@ -293,25 +292,15 @@ public class Model {
 	
 	private void recursion(List<Footballer> partial, int tot) {
 
-		// SE E' TROPPO LUNGO PIUTTOSTO PRENDI LE 10/15 MIGLIORI SOLUZIONI PER OGNI GIOCATORE
 		
 		if(partial.size()==this.sizeSelected) {
-			
-			// Qua devi controllare che ci siano tutti i ruoli
-			
-			// FATTO NEL CHECK RUOLI!!!!!!!!!
-			
-			// fai tipo un for con i ruoli e dei boolean
-			
-			
 			if(tot>this.totBest) {
 				if(checkRuoli(partial)) {
 					this.best = new LinkedList<>(partial);
 					this.totBest=tot;
 				}
-				
 			}
-		
+			
 		} else {
 			
 			for(Footballer fi: this.possible) {
@@ -334,7 +323,6 @@ public class Model {
 		}
 		
 	}
-
 
 
 
@@ -388,12 +376,9 @@ public class Model {
 	}
 	
 	
-	private List<String> caricaRuoli(List<Footballer> selected) {
-		
-		List<String> result = new LinkedList<>();
-		
+	private void caricaRuoli(List<Footballer> selected) {
+				
 		for(Footballer fi: selected) {
-			result.add(fi.getBest_pos());
 			
 			if(fi.getBest_pos().compareTo("P")==0) {
 				this.numP++;
@@ -409,7 +394,6 @@ public class Model {
 			}
 		}
 				
-		return result;
 	}
 	
 	private void setNumberPlayersPerRole(List<Footballer> selected) {

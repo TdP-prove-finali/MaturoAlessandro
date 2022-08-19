@@ -114,7 +114,7 @@ public class BuyController {
     	    	
     			
     		} catch (NumberFormatException e) {
-    			txtResult.appendText("Perfavore inserire valori numerici per stipendio e valore massimi!");
+    			txtResult.appendText("Perfavore inserire valori numerici per stipendio e valore massimo!");
     		}
     		
     	} else {

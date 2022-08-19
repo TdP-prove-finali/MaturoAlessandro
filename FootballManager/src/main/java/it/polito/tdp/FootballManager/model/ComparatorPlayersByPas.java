@@ -7,7 +7,7 @@ public class ComparatorPlayersByPas implements Comparator<Footballer> {
 	@Override
 	public int compare(Footballer o1, Footballer o2) {
 		// TODO Auto-generated method stub
-		return Integer.compare(o1.getPassing(), o2.getPassing());
+		return Integer.compare(o2.getPassing(), o1.getPassing());
 	}
 
 	

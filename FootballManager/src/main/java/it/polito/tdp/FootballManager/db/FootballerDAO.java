@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import it.polito.tdp.FootballManager.model.Club;
+import it.polito.tdp.FootballManager.model.ComparatorPlayersByTotIndexes;
 import it.polito.tdp.FootballManager.model.Footballer;
 
 public class FootballerDAO {
@@ -366,10 +368,11 @@ public class FootballerDAO {
 		
 		String indexStr = "";
 		
-		
+		/* Li ordino per numero alla fine così so che prendo i 20 migliori per media indici */
 		String sql = "SELECT p.number, p.name, p.best_pos, p.club, p.age, p.value, p.wage, p.tec, p.pas, p.mar, p.pos, p.str "
 				+ "FROM playerdef p "
-				+ "WHERE p.wage <= ? AND ? >= ? AND p.value <= ? AND p.best_pos = ? AND p.club <> ?";
+				+ "WHERE p.wage <= ? AND ? >= ? AND p.value <= ? AND p.best_pos = ? AND p.club <> ? "
+				+ "ORDER BY p.number"; 
 		
 		switch(index) {
 		
@@ -430,7 +433,7 @@ public class FootballerDAO {
 				if(this.getMediumStatsByPlayer(f)>=meanTeam) {
 					footballers.add(f);
 					cnt++;
-					if(cnt>=5) {
+					if(cnt>=20) {
 						//stay=false;
 						break;
 					}
@@ -457,10 +460,8 @@ public class FootballerDAO {
 				
 		String sql = "SELECT p.number, p.name, p.best_pos, p.club, p.age, p.value, p.wage, p.tec, p.pas, p.mar, p.pos, p.str "
 				+ "FROM playerdef p "
-				+ "WHERE p.wage <= ? AND p.value <= ? AND p.best_pos = ?";
-		
-		//FA DEI CASINI CON VALUE PERCHE' TU LO MEMORIZZI DIVISO UN MLN
-		
+				+ "WHERE p.wage <= ? AND p.value <= ? AND p.best_pos = ? AND p.club <> ?";
+				
 		
 		try {
 			Connection conn = DBConnect.getConnection();
@@ -469,11 +470,20 @@ public class FootballerDAO {
 			st.setInt(1, footballer.getWage());
 			st.setDouble(2, footballer.getValue()*1000000);
 			st.setString(3, footballer.getBest_pos());
+			st.setString(4, footballer.getClub());
 			
 			ResultSet rs = st.executeQuery();
-						
+			
+			int i=0;
+			
 			while(rs.next()) {
-								
+				
+				i++;
+				
+				if(i>20) {
+					break;
+				}
+				
 				double valueMln = ((double)(rs.getInt("value")))/(1000000);
 
 				
@@ -508,27 +518,20 @@ public class FootballerDAO {
 		}
 		
 		
-		// QUESTA PARTE QUA E' PER RETURNARE SOLO LE 5 MIGLIORI SOLUZIONI
-		// tra l'altro occhio che così non va se tipo è 4 fai for(Footballer fi: ...)  e ragionaa con size 
+		List<Footballer> bestTen = new LinkedList<>();
 		
 		if(footballers.size()>0) {
+			
+			Collections.sort(footballers, new ComparatorPlayersByTotIndexes());
 						
-			// QUA DEVO PRENDERE SOLO I MIGLIORI
-			
-			List<Footballer> bestTen = new LinkedList<Footballer>();
-			
 			for(Footballer fi: footballers) {
 				if(bestTen.size()<10) {
 					bestTen.add(fi);
 				}
 			}
-			
-			return bestTen;
-			
-		} else {
-			return null;
 		}
-				
+
+		return bestTen;		
 	}
 	
 

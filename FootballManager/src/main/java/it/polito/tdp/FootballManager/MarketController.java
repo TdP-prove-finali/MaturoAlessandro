@@ -94,17 +94,22 @@ public class MarketController {
 
     	List<Footballer> selected = tabPlayers.getSelectionModel().getSelectedItems();
     	
-    	/* Da qua faccio partire la ricorsione */
-    	List<Footballer> result = model.init(selected);
-    	
-    	if(result.size()!=0) {
-        	txtResult.appendText("La soluzione migliore trovata a partire dai giocatori selezionati per la vendita è:\n");
-        	for(Footballer fi: result) {
-        		txtResult.appendText(fi.getName()+"\n");
+    	if(selected.size()<=4) {
+        	/* Da qua faccio partire la ricorsione */
+        	List<Footballer> result = model.init(selected);
+        	
+        	if(result.size()>0) {
+            	txtResult.appendText("La soluzione migliore trovata a partire dai giocatori selezionati per la vendita è:\n");
+            	for(Footballer fi: result) {
+            		txtResult.appendText(fi.getName()+" ("+fi.getBest_pos()+")\n");
+            	}
+        	} else {
+        		txtResult.appendText("Non sono presenti soluzioni che migliorano gli indici della squadra.");
         	}
     	} else {
-    		txtResult.appendText("Non sono presenti soluzioni che migliorano gli indici della squadra.");
+    		txtResult.appendText("Perfavore selezionare un massimo di 4 giocatori.");
     	}
+
     	    	
 
     	
