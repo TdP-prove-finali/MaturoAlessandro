@@ -28,9 +28,7 @@ public class ClubDAO {
 			st.setString(1, club.getName());
 			
 			ResultSet rs = st.executeQuery();
-			
-	
-			
+				
 			while(rs.next()) {
 				
 			double valueMln = ((double)(rs.getInt("value")))/(1000000);
@@ -59,74 +57,6 @@ public class ClubDAO {
 		}
 		
 		return footballers;
-	}
-	
-	public List<String> getAllClubs(){
-		
-		List<String> clubs = new LinkedList<>();
-		
-		String sql = "SELECT DISTINCT p.club as c "
-				+ "FROM playerdef p "
-				+ "WHERE (p.based='Spain (First Division)') <> (p.based='Italy (Serie A)') <> (p.based='France (Ligue 1 Conforama)') <> (p.based='Germany (Bundesliga)') <> (p.based='England (Premier Division)') "
-				+ "ORDER BY p.club";
-		
-		
-		try {
-			Connection conn = DBConnect.getConnection();
-			PreparedStatement st = conn.prepareStatement(sql);			
-			ResultSet rs = st.executeQuery();
-			
-	
-			
-			while(rs.next()) {
-				clubs.add(rs.getString("c"));
-			}
-			
-			conn.close();
-			st.close();
-			rs.close();			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return clubs;
-	}
-	
-	public List<String> getAllClubsByChampionship(String championship){
-		List<String> clubs = new LinkedList<>();
-		
-		String sql = "SELECT DISTINCT p.club as c "
-				+ "FROM playerdef p "
-				+ "WHERE p.based=? "
-				+ "ORDER BY p.club";
-		
-		
-		try {
-			Connection conn = DBConnect.getConnection();
-			PreparedStatement st = conn.prepareStatement(sql);		
-			
-			st.setString(1, championship);
-			
-			ResultSet rs = st.executeQuery();
-			
-	
-			
-			while(rs.next()) {
-				clubs.add(rs.getString("c"));
-			}
-			
-			conn.close();
-			st.close();
-			rs.close();			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return clubs;
 	}
 	
 	public double averageAge(Club club) {
@@ -514,5 +444,72 @@ public class ClubDAO {
 		}
 		
 		return club;
-	} */
+	} 
+	
+	public List<String> getAllClubs(){
+		
+		List<String> clubs = new LinkedList<>();
+		
+		String sql = "SELECT DISTINCT p.club as c "
+				+ "FROM playerdef p "
+				+ "WHERE (p.based='Spain (First Division)') <> (p.based='Italy (Serie A)') <> (p.based='France (Ligue 1 Conforama)') <> (p.based='Germany (Bundesliga)') <> (p.based='England (Premier Division)') "
+				+ "ORDER BY p.club";
+		
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);			
+			ResultSet rs = st.executeQuery();
+						
+			while(rs.next()) {
+				clubs.add(rs.getString("c"));
+			}
+			
+			conn.close();
+			st.close();
+			rs.close();			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return clubs;
+	}
+	
+	public List<String> getAllClubsByChampionship(String championship){
+		List<String> clubs = new LinkedList<>();
+		
+		String sql = "SELECT DISTINCT p.club as c "
+				+ "FROM playerdef p "
+				+ "WHERE p.based=? "
+				+ "ORDER BY p.club";
+		
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);		
+			
+			st.setString(1, championship);
+			
+			ResultSet rs = st.executeQuery();
+				
+			while(rs.next()) {
+				clubs.add(rs.getString("c"));
+			}
+			
+			conn.close();
+			st.close();
+			rs.close();			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return clubs;
+	}
+	*/
 }

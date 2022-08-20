@@ -71,13 +71,6 @@ public class BuyController {
 
     @FXML // fx:id="assey"
     private NumberAxis assey; // Value injected by FXMLLoader
-    
-    
-
-    public BuyController() {
-		super();
-	}
-
 
 	@FXML
     void doBuy(ActionEvent event) {

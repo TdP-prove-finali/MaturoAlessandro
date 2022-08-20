@@ -59,24 +59,6 @@ public class HomeController {
 
     @FXML // fx:id="btnTeam"
     private Button btnTeam; // Value injected by FXMLLoader
-
-/*  @FXML // fx:id="colName"
-  	private TableColumn<Footballer, String> colName; // Value injected by FXMLLoader
-
-    @FXML // fx:id="colRole"
-    private TableColumn<Footballer, String> colRole; // Value injected by FXMLLoader
-
-    @FXML // fx:id="colValue"
-    private TableColumn<Footballer, Double> colValue; // Value injected by FXMLLoader
-
-    @FXML // fx:id="colWage"
-    private TableColumn<Footballer, Integer> colWage; // Value injected by FXMLLoader
-
-    @FXML // fx:id="colYear"
-    private TableColumn<Footballer, Integer> colYear; // Value injected by FXMLLoader
-
-    @FXML // fx:id="tabPlayers"
-    private TableView<Footballer> tabPlayers; // Value injected by FXMLLoader */
     
     @FXML // fx:id="lblError"
     private Label lblError; // Value injected by FXMLLoader
@@ -111,12 +93,7 @@ public class HomeController {
     	if(team!=null) {
 
     		model.setSelectedTeam(team);
-    		
-    		/* Carico la tabella */
-    		
-        /*	List<Footballer> footballers = model.getFootballerByTeam(team); 	
-        	tabPlayers.setItems(FXCollections.observableArrayList(footballers));  */
-        	
+    		        	
         	/* Attivo i bottoni */
         	lblError.setText(null);
             this.btnBuyPage.setDisable(false);
@@ -195,21 +172,7 @@ public class HomeController {
         assert btnChampionship != null : "fx:id=\"btnChampionship\" was not injected: check your FXML file 'Home.fxml'.";
         assert btnMarketPage != null : "fx:id=\"btnMarketPage\" was not injected: check your FXML file 'Home.fxml'.";
         assert btnTeam != null : "fx:id=\"btnTeam\" was not injected: check your FXML file 'Home.fxml'.";
-    /*  assert colName != null : "fx:id=\"colName\" was not injected: check your FXML file 'Home.fxml'.";
-        assert colRole != null : "fx:id=\"colRole\" was not injected: check your FXML file 'Home.fxml'.";
-        assert colValue != null : "fx:id=\"colValue\" was not injected: check your FXML file 'Home.fxml'.";
-        assert colWage != null : "fx:id=\"colWage\" was not injected: check your FXML file 'Home.fxml'.";
-        assert colYear != null : "fx:id=\"colYear\" was not injected: check your FXML file 'Home.fxml'.";
-        assert tabPlayers != null : "fx:id=\"tabPlayers\" was not injected: check your FXML file 'Home.fxml'."; */
         assert lblError != null : "fx:id=\"lblError\" was not injected: check your FXML file 'Home.fxml'.";
-        
-        /* Per la tabella */
-        
-     /* this.colName.setCellValueFactory(new PropertyValueFactory<Footballer, String>("name"));
-        this.colRole.setCellValueFactory(new PropertyValueFactory<Footballer, String>("best_role"));
-        this.colYear.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("age"));
-        this.colValue.setCellValueFactory(new PropertyValueFactory<Footballer, Double>("value"));
-        this.colWage.setCellValueFactory(new PropertyValueFactory<Footballer, Integer>("wage"));  */
 
         /* Disattivo i bottoni */
         this.btnTeam.setDisable(true);
@@ -220,6 +183,8 @@ public class HomeController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	
+    	/* Aggiungo i campionati */
     	this.boxChampionship.getItems().addAll(model.getAllChampionships());   	
     }
 

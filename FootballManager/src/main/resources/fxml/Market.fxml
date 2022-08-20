@@ -65,7 +65,7 @@
                 <NumberAxis fx:id="assey" side="LEFT" upperBound="20.0" />
               </yAxis>
                <VBox.margin>
-                  <Insets left="220.0" />
+                  <Insets left="190.0" />
                </VBox.margin>
             </BarChart>
             <HBox prefHeight="56.0" prefWidth="580.0">

@@ -23,7 +23,6 @@ public class Model {
 	private List<Footballer> best;
 	private List<Footballer> possible;
 	private int totBest;
-	private int size;
 	private boolean ok;
 	
 	/* Attributi utili per la parte ricorsiva */
@@ -188,8 +187,16 @@ public class Model {
 	
 	
 	
-	/* Metodi per la pagina Buy.fxml 
-	 * SCRIVILO IN BLU */
+	/**
+	 *  Metodo utilizzato nella pagina BuyController.java
+	 * @param index indice che si vuole migliorare
+	 * @param role ruolo in cui si cerca il giocatore
+	 * @param club club per cui si cerca il giocatore
+	 * @param maxWage stipendio massimo che si vorrebbe dare al giocatore
+	 * @param maxValueMln valore massimo in MLN di euro che si vorrebbe pagare il giocatore
+	 * @return la lista dei 5 migliori calciatori in quel ruolo e che migliorano
+	 *  	quell'indice ordinati dal migliore al peggiore
+	 */
 	
 	public List<Footballer> getFootballersMaxSalaryAndMaxValueAndBetterIndex(String index, String role, Club club, double maxWage, double maxValueMln) {
 		
@@ -219,10 +226,7 @@ public class Model {
 		
 		List<Footballer> result = footballerDAO.getFootballersMaxSalaryAndMaxValueAndBetterIndex(index, role, club, mean, maxWage, maxValue, meanTeam);
 		
-		/* Adesso ordino il risultato per media indici
-		 * Questo lo faccio perchè io uso solo 5 indici e non tutti quindi l'ordine potrebbe essere diverso */
-		
-		Collections.sort(result, new ComparatorPlayersByTotIndexes());
+		/* Adesso ordino il risultato per l'indice che si desiderava migliorare*/ 	
 		
 		switch(index) {
 		case "Technique":
@@ -242,26 +246,38 @@ public class Model {
 			break;	
 	}	
 		
-		return result;
+		/*Una volta riordinati prendo solo i migliori 5 */
+		
+		List<Footballer> daReturnare = new LinkedList<>();
+		
+		for(Footballer fi: result) {
+			daReturnare.add(fi);
+			if(daReturnare.size()>=5) {
+				break;
+			}
+		}
+		
+		return daReturnare;
 	}
 	
-	/* Metodi per la parte ricorsiva della pagina Market.fxml */
+	/* Metodi per la parte ricorsiva della pagina MarketController.java */
 	
 	public List<Footballer> init(List<Footballer> selected) {
+				
+		/* ogni volta che si entra puliamo tutte le liste */
+		possible = new LinkedList<>();
+		best = new LinkedList<>(); 
+		List<Footballer> partial = new LinkedList<>(); 
 		
-		this.size=selected.size();
-		
-		possible = new LinkedList<>(); /* così ogni volta che rientra ti pulisce la lista possible */
-		best = new LinkedList<>();
-		List<Footballer> partial = new LinkedList<>();
-		
-		ok=true;
+		this.ok=true;
 		
 		for(Footballer fi: selected) {
 			this.getPossibleFootballers(fi);
 		}
 		
-		if(ok==false) {
+		/* se il giocatore non avrà calciatori possibili usciremo
+		 * returnando null e MarketController.java lo comunicherà all'utente */
+		if(this.ok==false) {
 			return null;
 		}
 		
@@ -270,14 +286,14 @@ public class Model {
 		this.numC=0;
 		this.numA=0;	
 		
+		/* carico il numero di giocatori selezionati per ciascun ruolo */
 		this.caricaRuoli(selected);
 
-		
+		/* Imposto come totale indici della soluzione migliore il totale degli indici dei giocatori selezionati */
 		this.totBest=this.totIndexes(selected);
-		int tot=0;
-				
-		this.sizeSelected = selected.size();
+		int tot=0;		
 		
+		this.sizeSelected=selected.size();
 		
 		recursion(partial, tot);
 				
@@ -286,9 +302,7 @@ public class Model {
 
 
 
-	/* Controllo che non sia lo stesso calciatore già fatto devo ancora controllare che non ci sia nei possibili perchè magari x è
-	 * la soluzione migliore di y, il fatto che x sia la soluzione migliore di x lo controllo già e quindi non ci potrà essere
-	 * questa seconda cosa la devo controllare qua dentro*/
+	/* Metodo ricorsivo */
 	
 	private void recursion(List<Footballer> partial, int tot) {
 
@@ -330,17 +344,21 @@ public class Model {
 	
 	private void getPossibleFootballers(Footballer footballer) {
 		
+		/* media degli indici del calciatore passato */
 		double meanIndexes = this.averageStats(footballer);
 				
 		List<Footballer> result = footballerDAO.getPossibleFootballers(footballer, meanIndexes);
 		
 		if(result!=null) {
 			for(Footballer fi: result) {
+				/* Lo aggiungo solo se non lo contiene già perchè lo stesso calciatore potrebbe andare
+				 * bene per più di uno dei giocatori selezionati dall'utente */
 				if(!this.possible.contains(fi)) {
 					this.possible.add(fi);
 				}
 			}
 		} else {
+			/* se non ci sono calciatori possibili imposto ok a false */
 			this.ok=false;
 		}
 		
@@ -459,42 +477,6 @@ public class Model {
 		return true;
 	}
 
-
-	//BOH
-
-	private boolean checkClub(String clubName) {
-		
-		Club club = null;
-		
-		for(Club ci: clubs) {
-			if(ci.getName().compareTo(clubName)==0) {
-				club = ci;
-			}
-		}
-		
-		
-		if(club.getChampionship().compareTo("Spain (First Division)")==0) {
-			return true;
-		}
-		if(club.getChampionship().compareTo("Italy (Serie A)")==0) {
-			return true;
-		}
-		if(club.getChampionship().compareTo("France (Ligue 1 Conforama)")==0) {
-			return true;
-		}
-		if(club.getChampionship().compareTo("Germany (Bundesliga)")==0) {
-			return true;
-		}
-		if(club.getChampionship().compareTo("England (Premier Division)")==0) {
-			return true;
-		}
-		
-		
-		return false;
-	}
-	
-
-
 	// METODI PER LA PARTE IMPORTANTE
 	
 	public double calculateTotValue(List<Footballer> footballers) {
@@ -550,7 +532,6 @@ public class Model {
 		
 		for(Footballer footballer: club.getFootballers()) {
 			tot = footballer.getTechnique();
-			//System.out.println(footballer);
 		}
 				
 		mean = tot/(5*club.getFootballers().size());
@@ -566,7 +547,6 @@ public class Model {
 		
 		for(Footballer footballer: club.getFootballers()) {
 			tot = footballer.getPassing();
-			System.out.println(footballer);
 		}
 				
 		mean = tot/(5*club.getFootballers().size());
@@ -582,7 +562,6 @@ public class Model {
 		
 		for(Footballer footballer: club.getFootballers()) {
 			tot = footballer.getMarking();
-			System.out.println(footballer);
 		}
 				
 		mean = tot/(5*club.getFootballers().size());
@@ -598,7 +577,6 @@ public class Model {
 		
 		for(Footballer footballer: club.getFootballers()) {
 			tot = footballer.getPositioning();
-			System.out.println(footballer);
 		}
 				
 		mean = tot/(5*club.getFootballers().size());
@@ -614,7 +592,6 @@ public class Model {
 		
 		for(Footballer footballer: club.getFootballers()) {
 			tot = footballer.getStrength();
-			System.out.println(footballer);
 		}
 				
 		mean = tot/(5*club.getFootballers().size());
@@ -733,7 +710,36 @@ public class Model {
 		return this.clubDAO.getAllClubsByChampionship(championship);
 	}
 	
-	
+		private boolean checkClub(String clubName) {
+		
+		Club club = null;
+		
+		for(Club ci: clubs) {
+			if(ci.getName().compareTo(clubName)==0) {
+				club = ci;
+			}
+		}
+		
+		
+		if(club.getChampionship().compareTo("Spain (First Division)")==0) {
+			return true;
+		}
+		if(club.getChampionship().compareTo("Italy (Serie A)")==0) {
+			return true;
+		}
+		if(club.getChampionship().compareTo("France (Ligue 1 Conforama)")==0) {
+			return true;
+		}
+		if(club.getChampionship().compareTo("Germany (Bundesliga)")==0) {
+			return true;
+		}
+		if(club.getChampionship().compareTo("England (Premier Division)")==0) {
+			return true;
+		}
+		
+		
+		return false;
+	}
 	
 	*/
 

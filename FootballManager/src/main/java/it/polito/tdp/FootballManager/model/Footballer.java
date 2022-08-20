@@ -3,8 +3,6 @@ package it.polito.tdp.FootballManager.model;
 import java.util.Objects;
 
 public class Footballer {
-
-	// p.number, p.name, p.best_role, p.club, p.age, p.wage, p.value, p.tec, p.pas, p.mar, p.pos, p.str, p.fin 
 	
 	private int id;
 	private String name;

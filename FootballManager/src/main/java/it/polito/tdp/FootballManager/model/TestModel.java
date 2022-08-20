@@ -8,7 +8,7 @@ public class TestModel {
 		// TODO Auto-generated method stub
 		Model model = new Model();
 		
-		/*ootballer f1 = model.getFootballerByName("Lionel Messi");
+		/*Footballer f1 = model.getFootballerByName("Lionel Messi");
 		System.out.println("Get footballer by name");
 		System.out.println(f1);
 		
