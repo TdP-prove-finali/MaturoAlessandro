@@ -1,7 +1,7 @@
 # Tool per le simulazioni di mercato di una rosa calcistica
 
 
-##Istruzioni per l'installazione e l'utilizzo:
+Istruzioni per l'installazione e l'utilizzo:
 
 1-Forkare il repository del progetto ( URI: https://github.com/TdP-prove-finali/MaturoAlessandro);
 
