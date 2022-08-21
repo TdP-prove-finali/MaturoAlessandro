@@ -8,8 +8,8 @@ Forkare il repository del progetto ( URI: );
 
 2- Caricare il file ,  sul proprio database MySQL;
 
-Modificare, all'interno della classe DBConnect, contenuta nel package db, la password di accesso al database, inserendo la propria;
+3- Modificare, all'interno della classe DBConnect, contenuta nel package db, la password di accesso al database, inserendo la propria;
 
-Visionare la guida all'utilizzo: ;
+4- Visionare la guida all'utilizzo: ;
 
-Eseguire la classe "Main" per avviare l'applicazione;
+5- Eseguire la classe "Main" per avviare l'applicazione;
