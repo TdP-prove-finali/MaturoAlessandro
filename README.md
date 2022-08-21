@@ -10,6 +10,6 @@ Forkare il repository del progetto ( URI: https://github.com/TdP-prove-finali/Ma
 
 3- Modificare, all'interno della classe DBConnect, contenuta nel package db, la password di accesso al database, inserendo la propria;
 
-4- Visionare la guida all'utilizzo: ;
+4- Visionare la guida all'utilizzo: https://www.youtube.com/watch?v=-H3ETWBZ_48;
 
 5- Eseguire la classe "Main" per avviare l'applicazione;
