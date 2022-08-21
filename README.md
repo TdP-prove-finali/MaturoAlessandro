@@ -4,9 +4,9 @@
 Istruzioni per l'installazione e l'utilizzo:
 Forkare il repository del progetto ( URI: );
 
-Importare il progetto Maven nel proprio IDE preferito (IDE testati: Eclipse);
+1- Importare il progetto Maven nel proprio IDE preferito;
 
-Caricare il file TasteTrip.sql, presente all'interno della cartella "DB", sul proprio database MySQL;
+2- Caricare il file ,  sul proprio database MySQL;
 
 Modificare, all'interno della classe DBConnect, contenuta nel package db, la password di accesso al database, inserendo la propria;
 
