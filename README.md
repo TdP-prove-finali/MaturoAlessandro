@@ -7,7 +7,7 @@ Istruzioni per l'installazione e l'utilizzo:
 
 2- Importare il progetto Maven nel proprio IDE preferito;
 
-3- Caricare il file ,  sul proprio database MySQL;
+3- Caricare il file Database.zip ( URI: https://github.com/TdP-prove-finali/MaturoAlessandro/tree/main/Database) ,  sul proprio database MySQL;
 
 4- Modificare, all'interno della classe DBConnect, contenuta nel package db, la password di accesso al database, inserendo la propria;
 
