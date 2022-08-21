@@ -2,7 +2,7 @@
 
 
 Istruzioni per l'installazione e l'utilizzo:
-Forkare il repository del progetto ( URI: );
+Forkare il repository del progetto ( URI: https://github.com/TdP-prove-finali/MaturoAlessandro);
 
 1- Importare il progetto Maven nel proprio IDE preferito;
 
